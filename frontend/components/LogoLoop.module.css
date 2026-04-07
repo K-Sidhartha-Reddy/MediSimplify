@@ -1,0 +1,176 @@
+.logoloop {
+  position: relative;
+  overflow: hidden;
+
+  --logoloop-gap: 32px;
+  --logoloop-logoHeight: 28px;
+  --logoloop-fadeColorAuto: #ffffff;
+}
+
+.logoloopVertical {
+  height: 100%;
+  display: inline-block;
+}
+
+.logoloopScaleHover {
+  padding-top: calc(var(--logoloop-logoHeight) * 0.1);
+  padding-bottom: calc(var(--logoloop-logoHeight) * 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .logoloop {
+    --logoloop-fadeColorAuto: #020617;
+  }
+}
+
+.logoloopTrack {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  position: relative;
+  z-index: 0;
+}
+
+.logoloopVertical .logoloopTrack {
+  flex-direction: column;
+  height: max-content;
+  width: 100%;
+}
+
+.logoloopList {
+  display: flex;
+  align-items: center;
+}
+
+.logoloopVertical .logoloopList {
+  flex-direction: column;
+}
+
+.logoloopItem {
+  flex: 0 0 auto;
+  margin-right: var(--logoloop-gap);
+  font-size: var(--logoloop-logoHeight);
+  line-height: 1;
+}
+
+.logoloopVertical .logoloopItem {
+  margin-right: 0;
+  margin-bottom: var(--logoloop-gap);
+}
+
+.logoloopNode {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logoloopItem img {
+  height: var(--logoloop-logoHeight);
+  width: auto;
+  display: block;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logoloopScaleHover .logoloopItem {
+  overflow: visible;
+}
+
+.logoloopScaleHover .logoloopItem:hover img,
+.logoloopScaleHover .logoloopItem:hover .logoloopNode {
+  transform: scale(1.15);
+  transform-origin: center center;
+}
+
+.logoloopScaleHover .logoloopNode {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logoloopLink {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.logoloopLink:hover {
+  opacity: 0.8;
+}
+
+.logoloopLink:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.logoloopFade::before,
+.logoloopFade::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(24px, 8%, 120px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.logoloopFade::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.logoloopFade::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.logoloopVertical.logoloopFade::before,
+.logoloopVertical.logoloopFade::after {
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: clamp(24px, 8%, 120px);
+}
+
+.logoloopVertical.logoloopFade::before {
+  top: 0;
+  bottom: auto;
+  background: linear-gradient(
+    to bottom,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.logoloopVertical.logoloopFade::after {
+  bottom: 0;
+  top: auto;
+  background: linear-gradient(
+    to top,
+    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoloopTrack {
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .logoloopItem img,
+  .logoloopNode {
+    transition: none !important;
+  }
+}
