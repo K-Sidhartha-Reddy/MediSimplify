@@ -3,7 +3,7 @@ import type { AuthResponse, Report, UploadResponse } from "@/lib/types";
 const normalizeBase = (base: string) => (base.endsWith("/") ? base.slice(0, -1) : base);
 const configuredBase = process.env.NEXT_PUBLIC_API_URL?.trim();
 
-const API_BASES = ["/api", configuredBase]
+const API_BASES = [configuredBase, "/api"]
   .filter((value): value is string => Boolean(value && value.trim()))
   .map((value) => normalizeBase(value))
   .filter((value, index, arr) => arr.indexOf(value) === index);
@@ -15,13 +15,30 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   for (const base of API_BASES) {
     try {
-      response = await fetch(buildUrl(base, path), {
+      const nextResponse = await fetch(buildUrl(base, path), {
         ...init,
         headers: {
           "Content-Type": "application/json",
           ...(init?.headers || {})
         }
       });
+
+      if (nextResponse.ok) {
+        response = nextResponse;
+        break;
+      }
+
+      if (
+        nextResponse.status === 404 ||
+        nextResponse.status === 502 ||
+        nextResponse.status === 503 ||
+        nextResponse.status === 504
+      ) {
+        response = nextResponse;
+        continue;
+      }
+
+      response = nextResponse;
       break;
     } catch (error) {
       void error;

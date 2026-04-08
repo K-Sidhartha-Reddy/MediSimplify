@@ -187,7 +187,8 @@ class MedicalReportSimplifierPipeline:
     @lru_cache(maxsize=1)
     def _load_t5_simplifier():
         # T5 text2text pipeline for patient-friendly simplification.
-        return pipeline("text2text-generation", model="/Users/ksidharthareddy/medicalreportssimplifier/models/t5-medical/checkpoint-2340", tokenizer="t5-small")
+        model_path = "/Users/ksidharthareddy/medicalreportsimplifier/models/t5-medical-new"
+        return pipeline("text2text-generation", model=model_path, tokenizer=model_path)
 
     @staticmethod
     @lru_cache(maxsize=1)

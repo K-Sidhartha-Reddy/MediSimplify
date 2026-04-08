@@ -2,7 +2,7 @@ from transformers import pipeline
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[3]
-MODEL_PATH = BASE_DIR / "models" / "t5-prescription"
+MODEL_PATH = BASE_DIR / "models" / "t5-medical-new"
 
 print(f"Loading simplification model from: {MODEL_PATH}")
 
