@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from datetime import datetime, timezone
 from pymongo.database import Database
 from app.core.database import get_db
@@ -6,6 +6,13 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.schemas.auth import AuthResponse, LoginRequest, SignupRequest
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+# Handle CORS preflight requests
+@router.options("/signup")
+@router.options("/login")
+def handle_options():
+    return Response(status_code=200)
 
 
 def _serialize_user(user: dict) -> dict:

@@ -3,7 +3,7 @@ import type { AuthResponse, Report, UploadResponse } from "@/lib/types";
 const normalizeBase = (base: string) => (base.endsWith("/") ? base.slice(0, -1) : base);
 const configuredBase = process.env.NEXT_PUBLIC_API_URL?.trim();
 
-const API_BASES = [configuredBase, "/api"]
+const API_BASES = ["/api", configuredBase]
   .filter((value): value is string => Boolean(value && value.trim()))
   .map((value) => normalizeBase(value))
   .filter((value, index, arr) => arr.indexOf(value) === index);

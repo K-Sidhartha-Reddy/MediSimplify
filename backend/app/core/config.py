@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440
     upload_dir: str = "./uploads"
     tesseract_cmd: str = "/opt/homebrew/bin/tesseract"
-    cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+    cors_origins: str = "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001"
 
     model_config = SettingsConfigDict(
         env_file=str(BACKEND_ROOT / ".env"),

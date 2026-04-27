@@ -27,12 +27,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
 
+  const isValidStoredSession = (value: unknown): value is { token: string; user: User } => {
+    if (!value || typeof value !== "object") return false;
+    const parsed = value as Record<string, unknown>;
+    const parsedUser = parsed.user as Record<string, unknown> | undefined;
+
+    return (
+      typeof parsed.token === "string" &&
+      Boolean(parsedUser) &&
+      typeof parsedUser?.id === "string" &&
+      typeof parsedUser?.email === "string" &&
+      typeof parsedUser?.full_name === "string" &&
+      typeof parsedUser?.created_at === "string"
+    );
+  };
+
   useEffect(() => {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const parsed = JSON.parse(raw) as { token: string; user: User };
-      setToken(parsed.token);
-      setUser(parsed.user);
+      try {
+        const parsed = JSON.parse(raw) as unknown;
+        if (isValidStoredSession(parsed)) {
+          setToken(parsed.token);
+          setUser(parsed.user);
+        } else {
+          window.localStorage.removeItem(STORAGE_KEY);
+        }
+      } catch {
+        window.localStorage.removeItem(STORAGE_KEY);
+      }
     }
     setReady(true);
   }, []);
