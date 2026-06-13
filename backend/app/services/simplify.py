@@ -2,18 +2,19 @@ import re
 from functools import lru_cache
 
 from transformers import pipeline
-from pathlib import Path
+from app.core.config import get_settings
 
-BASE_DIR = Path(__file__).resolve().parents[3]
-MODEL_PATH = BASE_DIR / "models" / "t5-medical-new"
+settings = get_settings()
+MODEL_NAME_OR_PATH = settings.simplifier_model_name_or_path
 
 
 @lru_cache(maxsize=1)
 def _load_simplifier():
-    print(f"Loading simplification model from: {MODEL_PATH}")
+    print(f"Loading simplification model from: {MODEL_NAME_OR_PATH}")
     model = pipeline(
         "summarization",
-        model=str(MODEL_PATH),
+        model=MODEL_NAME_OR_PATH,
+        tokenizer=MODEL_NAME_OR_PATH,
         max_length=200,
         min_length=50
     )

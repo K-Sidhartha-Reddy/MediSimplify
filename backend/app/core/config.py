@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
@@ -15,6 +16,7 @@ class Settings(BaseSettings):
     upload_dir: str = "./uploads"
     tesseract_cmd: str = "/opt/homebrew/bin/tesseract"
     cors_origins: str = "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001"
+    simplifier_model_name_or_path: str = str(PROJECT_ROOT / "models" / "t5-medical-new")
 
     model_config = SettingsConfigDict(
         env_file=str(BACKEND_ROOT / ".env"),
