@@ -7,17 +7,27 @@ from app.core.config import get_settings
 
 settings = get_settings()
 
-client = MongoClient(settings.mongodb_url, tlsCAFile=certifi.where())
-db = client[settings.mongodb_db_name]
+# Lazy initialization: MongoDB client is created on first use, not at import time
+_client = None
+_db = None
+
+
+def _get_db_client():
+    """Get or create MongoDB client (initialized on first call, not at import)."""
+    global _client, _db
+    if _client is None:
+        _client = MongoClient(settings.mongodb_url, tlsCAFile=certifi.where())
+        _db = _client[settings.mongodb_db_name]
+    return _db
 
 
 def get_users_collection(database: Database | None = None) -> Collection:
-    target = database or db
+    target = database or _get_db_client()
     return target["users"]
 
 
 def get_reports_collection(database: Database | None = None) -> Collection:
-    target = database or db
+    target = database or _get_db_client()
     return target["reports"]
 
 
@@ -30,4 +40,4 @@ def ensure_indexes() -> None:
 
 
 def get_db() -> Generator[Database, None, None]:
-    yield db
+    yield _get_db_client()
